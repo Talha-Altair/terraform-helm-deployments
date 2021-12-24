@@ -1,0 +1,23 @@
+deployment:
+
+  name: nginx
+
+  replicas: 1
+
+image:
+
+  name: nginx
+
+  tag: default
+
+  port: 80
+
+service:
+
+  type: ClusterIP
+
+  name: nginx
+
+  port: 80
+
+  targetPort: 80
