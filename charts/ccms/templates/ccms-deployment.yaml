@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  generation: 1
+  labels:
+    app: ccms
+    ccms_id: ccms-{{ .Values.ccms_deployment_name }}
+  name: ccms-{{ .Values.ccms_deployment_name }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: ccms
+      ccms_id: ccms-{{ .Values.ccms_deployment_name }}
+      version: v0
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/status: '{"version":"8ce4319f058e4fd39ce0cc81ae1fff45d0d89dba6184ebfefff70377f3e7edd9","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
+      creationTimestamp: null
+      labels:
+        app: ccms
+        ccms_id: ccms-{{ .Values.ccms_deployment_name }}
+        version: v0
+    spec:
+      containers:
+        - envFrom:
+         - configMapRef:
+             name: {{ .Values.ccms_deployment_name }}
+        image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: IfNotPresent
+        name: ccms
+        ports:
+        - containerPort: {{ .Values.image.port }}
+          name: https
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/secrets/google
+          name: google-cloud-key
+        - mountPath: /var/secrets/neone-cloud-tls
+          name: neone-cloud-tls
+        # - mountPath: /var/neobase-configuration-templates
+        #   name: neobase-configuration-templates
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: google-cloud-key
+        secret:
+          defaultMode: 420
+          secretName: neone-ccms
+      - name: neone-cloud-tls
+        secret:
+          defaultMode: 420
+          secretName: neone-cloud-tls
+      # - configMap:
+      #     defaultMode: 420
+      #     name: neobase-specification-templates
+      #   name: neobase-configuration-templates
+

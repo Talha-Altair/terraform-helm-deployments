@@ -1,0 +1,21 @@
+# Define subsets to control routing to specific neobase(s)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: ccms-{{ .Values.ccms_deployment_name }}
+  namespace: default
+spec:
+  host: ccms-service
+  subsets:
+  # Template start block
+  #Template update ccms-id
+  - name: ccms-{{ .Values.ccms_deployment_name }}
+    labels:
+      app: ccms
+      # Template update ccms-id
+      ccms_id: ccms-test
+  # Template end block
+  # - name: ccms-test
+  #   labels:
+  #     app: ccms
+  #     ccms_id: ccms-test

@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ccms-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 443
+      name: https-ccms
+      protocol: HTTPS
+    tls:
+      mode: PASSTHROUGH # Ensure istio doesn't try to terminiate the TLS
+    hosts:
+    - "ccms-{{ .Values.ccms_deployment_name }}.neone.cloud"

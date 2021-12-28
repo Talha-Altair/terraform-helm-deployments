@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ccms-{{ .Values.ccms_deployment_name }}
+  namespace: default
+spec:
+  # Which SNI host names apply to this virtual service
+  hosts:
+    - "ccms-{{ .Values.ccms_deployment_name }}.neone.cloud"
+  gateways:
+    # Specify gateway this virtual service is bound to
+    - ccms-gateway
+  tls:
+   - match:
+     - port: 443
+       sniHosts:
+         - ccms-{{ .Values.ccms_deployment_name }}.neone.cloud
+     route:
+       - destination:
+           host: ccms-service
+           subset: ccms-{{ .Values.ccms_deployment_name }}
+           port:
+             number: 8443

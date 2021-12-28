@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+  GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
+  # neone_assets_dir_path: /var/neobase-configuration-templates
+  NEONE_CCMS_DEFAULT_API_KEY: grumpygopher
+  NEONE_CCMS_HOST: 0.0.0.0
+  NEONE_CCMS_HTTP_PORT: "8080"
+  NEONE_CCMS_TLS_CERTIFICATE_PATH: /var/secrets/neone-cloud-tls/tls.crt
+  NEONE_CCMS_TLS_KEY_PATH: /var/secrets/neone-cloud-tls/tls.key
+  NEONE_CCMS_TLS_PORT: "8443"
+  NEONE_GCF_URL_CREATE_NEOS_DB: https://us-central1-neone-sandbox.cloudfunctions.net/CreateNeosRootDatabase
+  NEONE_GCF_URL_GET_NEOS_USAGE: https://us-central1-neone-sandbox.cloudfunctions.net/GetNeosUsage
+  NEONE_GCF_URL_UPDATE_PLAN: https://us-central1-neone-sandbox.cloudfunctions.net/UpdateNeosPlanConfigs
+  NEONE_CCMS_SERVICE_EMAIL: neone-ccms-test@ccms-sandbox.iam.gserviceaccount.com
+
+kind: ConfigMap
+metadata:
+  labels:
+    app: ccms
+    deployment: {{ .Values.ccms_deployment_name }}
+    version: v0
+  name: {{ .Values.ccms_deployment_name }}

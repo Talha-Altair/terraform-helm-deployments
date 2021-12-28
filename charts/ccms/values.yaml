@@ -1,8 +1,4 @@
-deployment:
-
-  name: nginx
-
-  replicas: 1
+ccms_deployment_name: test
 
 image:
 
@@ -11,13 +7,3 @@ image:
   tag: default
 
   port: 80
-
-service:
-
-  type: ClusterIP
-
-  name: nginx
-
-  port: 80
-
-  targetPort: 80
