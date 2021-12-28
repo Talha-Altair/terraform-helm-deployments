@@ -13,7 +13,7 @@ spec:
     labels:
       app: ccms
       # Template update ccms-id
-      ccms_id: ccms-test
+      ccms_id: ccms-{{ .Values.ccms_deployment_name }}
   # Template end block
   # - name: ccms-test
   #   labels:
